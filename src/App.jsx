@@ -4,10 +4,38 @@ import Footer from "./components/Footer";
 import Filter from "./components/Filter";
 import Products from "./components/Products";
 import CartPanel from "./components/CartPanel";
+import useFetchData from "./customHooks/useFetchData";
+import { PRODUCTS_URL, MATERIAL_URL, COLORS_URL } from "./constants/apiUrls";
 import "./App.css";
 
 function App() {
+  const [products, setProducts] = useState([]);
+  const [materials, setMaterials] = useState([]);
+  const [colors, setColors] = useState([]);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const [cartItems, setCartItems] = useState([]);
   const [isScrolled, setIsScrolled] = useState(false);
+  const heroRef = useRef();
+
+  const { data, error, loading } = useFetchData(PRODUCTS_URL);
+
+  const {
+    data: materialsData,
+    error: materialsError,
+    loading: materialsLoading,
+  } = useFetchData(MATERIAL_URL);
+
+  const {
+    data: colorsData,
+    error: colorsError,
+    loading: colorsLoading,
+  } = useFetchData(COLORS_URL);
+
+  useEffect(() => {
+    setProducts(data?.products);
+    setMaterials(materialsData?.material);
+    setColors(colorsData?.colors);
+  }, [data, materialsData, colorsData]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -21,7 +49,12 @@ function App() {
     };
   }, []);
 
-  const heroRef = useRef();
+  const handleMaterialFilter = (id) => {
+    const updatedProductsByMaterials = products?.filter(
+      (product) => product?.materialId !== id
+    );
+    setProducts(updatedProductsByMaterials);
+  };
 
   return (
     <>
@@ -29,7 +62,11 @@ function App() {
         ref={heroRef}
         className="hero bg-[url('/hero-img.png')] h-[575px] relative"
       >
-        <Header isScrolled={isScrolled} />
+        <Header
+          isScrolled={isScrolled}
+          setIsCartOpen={setIsCartOpen}
+          cartCount={cartItems?.length}
+        />
         <div className="absolute top-[40%] text-white ml-[137px]">
           <h1 className="text-[64px] font-black leading-none">Latest Styles</h1>
           <p className="mb-[18px] text-xl font-extrabold">
@@ -39,7 +76,12 @@ function App() {
             Browse all styles
           </button>
         </div>
-        <CartPanel />
+        <CartPanel
+          isCartOpen={isCartOpen}
+          setIsCartOpen={setIsCartOpen}
+          cartItems={cartItems}
+          setCartItems={setCartItems}
+        />
       </div>
 
       <div
@@ -47,8 +89,23 @@ function App() {
           isScrolled ? "text-black" : ""
         }`}
       >
-        <Filter />
-        <Products />
+        <Filter
+          materials={materials}
+          materialsError={materialsError}
+          materialsLoading={materialsLoading}
+          colors={colors}
+          colorsError={colorsError}
+          colorsLoading={colorsLoading}
+          handleMaterialFilter={handleMaterialFilter}
+        />
+        <Products
+          products={products}
+          loading={loading}
+          materials={materials}
+          colors={colors}
+          setCartItems={setCartItems}
+          setIsCartOpen={setIsCartOpen}
+        />
       </div>
 
       <Footer />

@@ -1,7 +1,7 @@
 import React from "react";
 import { CartIcon } from "../icons";
 
-const Header = ({ isScrolled }) => {
+const Header = ({ isScrolled, setIsCartOpen, cartCount }) => {
   return (
     <div
       className={`flex justify-between p-8 pb-12 bg-gradient-to-b from-black to-[rgba(0, 0, 0, 0.0)] fixed w-full z-10 ${
@@ -26,9 +26,9 @@ const Header = ({ isScrolled }) => {
               Featured Products
             </a>
           </li>
-          <li className="flex ml-11">
+          <li className="flex ml-11" onClick={() => setIsCartOpen(true)}>
             <CartIcon className="cursor-pointer" />
-            <span className="ml-4">0</span>
+            <span className="ml-4">{cartCount}</span>
           </li>
         </ul>
       </nav>
