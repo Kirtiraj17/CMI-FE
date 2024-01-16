@@ -10,7 +10,14 @@ html {
   .active {
     @apply !font-bold;
   }
-  /* ... */
+
+  .active-filter {
+    @apply !font-bold;
+  }
+
+  .active-page {
+    @apply bg-gray-300 rounded-full;
+  }
 }
 
 /* :root {

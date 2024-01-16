@@ -1,7 +1,9 @@
 import { useState } from "react";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import Filter from "./components/Filter";
 import "./App.css";
+import Products from "./components/Products";
 
 function App() {
   return (
@@ -17,6 +19,11 @@ function App() {
             Browse all styles
           </button>
         </div>
+      </div>
+
+      <div className="flex py-12 px-8">
+        <Filter />
+        <Products />
       </div>
 
       <Footer />

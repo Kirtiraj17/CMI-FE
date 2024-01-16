@@ -3,7 +3,7 @@ import { CartIcon } from "../icons";
 
 const Header = () => {
   return (
-    <div className="flex justify-between p-8 pb-12 bg-gradient-to-b from-black to-[rgba(0, 0, 0, 0.0)] text-white fixed w-full">
+    <div className="flex justify-between p-8 pb-12 bg-gradient-to-b from-black to-[rgba(0, 0, 0, 0.0)] text-white fixed w-full z-50">
       <h1 className="text-lg font-extrabold">
         <span className="text-[#BFBEBE]">RIGHT</span>FIT.COM
       </h1>
