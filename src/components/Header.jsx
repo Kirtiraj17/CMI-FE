@@ -1,9 +1,13 @@
 import React from "react";
 import { CartIcon } from "../icons";
 
-const Header = () => {
+const Header = ({ isScrolled }) => {
   return (
-    <div className="flex justify-between p-8 pb-12 bg-gradient-to-b from-black to-[rgba(0, 0, 0, 0.0)] text-white fixed w-full z-50">
+    <div
+      className={`flex justify-between p-8 pb-12 bg-gradient-to-b from-black to-[rgba(0, 0, 0, 0.0)] fixed w-full z-10 ${
+        isScrolled ? "transparent-background" : "text-white"
+      }`}
+    >
       <h1 className="text-lg font-extrabold">
         <span className="text-[#BFBEBE]">RIGHT</span>FIT.COM
       </h1>

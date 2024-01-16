@@ -2,7 +2,7 @@ import React from "react";
 
 const Filter = () => {
   return (
-    <div className="w-1/4">
+    <div className="w-1/4 mr-8">
       <div className="font-bold mb-8">Filter</div>
       <div className="mb-8">
         <p className="mb-2">Materials</p>
