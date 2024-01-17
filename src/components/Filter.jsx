@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 const Filter = ({
   materials,
@@ -7,7 +7,12 @@ const Filter = ({
   colors,
   colorsError,
   colorsLoading,
-  handleMaterialFilter
+  handleProductFilter,
+  handleRemoveFilter,
+  activeMaterial,
+  setActiveMaterial,
+  activeColor,
+  setActiveColor,
 }) => {
   return (
     <div className="w-1/5 mr-8">
@@ -18,17 +23,33 @@ const Filter = ({
           <div>Loading...</div>
         ) : (
           <ul className="max-h-40 overflow-y-auto">
-            <li className="mb-2 transition-all hover:font-bold cursor-pointer active-filter">
+            <li
+              className={`mb-2 transition-all hover:font-bold cursor-pointer ${
+                !activeMaterial ? "active-filter" : ""
+              }`}
+              onClick={() => {
+                handleProductFilter(null);
+                handleRemoveFilter(null, "material");
+                setActiveMaterial(false);
+              }}
+            >
               All
             </li>
             {materials?.map((material) => {
-              const materialName = material?.name?.charAt(0).toUpperCase() + material?.name.slice(1);
+              const materialName =
+                material?.name?.charAt(0).toUpperCase() +
+                material?.name.slice(1);
 
               return (
                 <li
                   key={material?.id}
-                  className="mb-2 transition-all hover:font-bold cursor-pointer"
-                  onClick={() => handleMaterialFilter(material?.id)}
+                  className={`mb-2 transition-all hover:font-bold cursor-pointer ${
+                    activeMaterial === material?.id ? "active-filter" : ""
+                  }`}
+                  onClick={() => {
+                    handleProductFilter(material?.id, "material");
+                    setActiveMaterial(material?.id);
+                  }}
                 >
                   {materialName}
                 </li>
@@ -43,16 +64,32 @@ const Filter = ({
           <div>Loading...</div>
         ) : (
           <ul className="max-h-40 overflow-y-auto">
-            <li className="mb-2 transition-all hover:font-bold cursor-pointer active-filter">
+            <li
+              className={`mb-2 transition-all hover:font-bold cursor-pointer ${
+                !activeColor ? "active-filter" : ""
+              }`}
+              onClick={() => {
+                handleProductFilter(null);
+                handleRemoveFilter(null, "color");
+                setActiveColor(false);
+              }}
+            >
               All
             </li>
             {colors?.map((color) => {
-              const colorName = color?.name?.charAt(0).toUpperCase() + color?.name.slice(1);
+              const colorName =
+                color?.name?.charAt(0).toUpperCase() + color?.name.slice(1);
 
               return (
                 <li
                   key={color?.id}
-                  className="mb-2 transition-all hover:font-bold cursor-pointer"
+                  className={`mb-2 transition-all hover:font-bold cursor-pointer ${
+                    activeColor === color?.id ? "active-filter" : ""
+                  }`}
+                  onClick={() => {
+                    handleProductFilter(color?.id, "color");
+                    setActiveColor(color?.id);
+                  }}
                 >
                   {colorName}
                 </li>

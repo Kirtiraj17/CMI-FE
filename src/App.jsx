@@ -10,10 +10,11 @@ import "./App.css";
 
 function App() {
   const [products, setProducts] = useState([]);
-  const [materials, setMaterials] = useState([]);
-  const [colors, setColors] = useState([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [cartItems, setCartItems] = useState([]);
+  const [activeMaterial, setActiveMaterial] = useState(false);
+  const [activeColor, setActiveColor] = useState(false);
+  const [filters, setFilters] = useState([]);
   const [isScrolled, setIsScrolled] = useState(false);
   const heroRef = useRef();
 
@@ -33,13 +34,11 @@ function App() {
 
   useEffect(() => {
     setProducts(data?.products);
-    setMaterials(materialsData?.material);
-    setColors(colorsData?.colors);
   }, [data, materialsData, colorsData]);
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY >= heroRef.current.offsetHeight);
+      setIsScrolled(window.scrollY >= heroRef.current.offsetHeight - 40);
     };
 
     window.addEventListener("scroll", handleScroll);
@@ -49,12 +48,85 @@ function App() {
     };
   }, []);
 
-  const handleMaterialFilter = (id) => {
-    const updatedProductsByMaterials = products?.filter(
-      (product) => product?.materialId !== id
+  const handleProductFilter = (id, type) => {
+    const updatedMaterialFilters = materialsData?.material?.filter(
+      (material) => material?.id === id
     );
-    setProducts(updatedProductsByMaterials);
+    const updatedColorFilters = colorsData?.colors?.filter(
+      (color) => color?.id === id
+    );
+
+    setFilters((prevFilters) => {
+      // Find the index of the filter with the same type
+      const index = prevFilters.findIndex((filter) => filter.type === type);
+
+      // Create a new array with the previous filters
+      const updatedFilters = [...prevFilters];
+
+      // Remove the filter with the same type if it exists
+      if (index !== -1) {
+        updatedFilters.splice(index, 1);
+      }
+
+      // Add the updated filter
+      if (type === "material" && updatedMaterialFilters.length > 0) {
+        updatedFilters.push({
+          id: updatedMaterialFilters[0].id,
+          name: updatedMaterialFilters[0].name,
+          type,
+        });
+      }
+
+      if (type === "color" && updatedColorFilters.length > 0) {
+        updatedFilters.push({
+          id: updatedColorFilters[0].id,
+          name: updatedColorFilters[0].name,
+          type,
+        });
+      }
+
+      const updatedProductsByFilters = filterProductsByFilters(
+        data?.products,
+        updatedFilters.slice(0, 2)
+      );
+      setProducts(updatedProductsByFilters);
+
+      // Ensure there are at most two values
+      return updatedFilters.slice(0, 2);
+    });
   };
+
+  const handleRemoveFilter = (filterName, filterType) => {
+    setFilters((prevFilters) => {
+      const updatedFilters = prevFilters.filter(
+        (filter) => filter.name !== filterName && filter.type !== filterType
+      );
+
+      const updatedProductsByFilters = filterProductsByFilters(
+        data?.products,
+        updatedFilters.slice(0, 2)
+      );
+      setProducts(updatedProductsByFilters);
+      return updatedFilters.slice(0, 2);
+    });
+  };
+
+  const filterProductsByFilters = (products, filters) => {
+    return products.filter((product) => {
+      const materialFilter = filters.find(
+        (filter) => filter.type === "material"
+      );
+      const colorFilter = filters.find((filter) => filter.type === "color");
+
+      const materialMatch =
+        !materialFilter || product.materialId === materialFilter.id;
+      const colorMatch = !colorFilter || product.colorId === colorFilter.id;
+
+      return materialMatch && colorMatch;
+    });
+  };
+
+  // console.log(products, "products", filters);
 
   return (
     <>
@@ -90,21 +162,30 @@ function App() {
         }`}
       >
         <Filter
-          materials={materials}
+          materials={materialsData?.material}
           materialsError={materialsError}
           materialsLoading={materialsLoading}
-          colors={colors}
+          colors={colorsData?.colors}
           colorsError={colorsError}
           colorsLoading={colorsLoading}
-          handleMaterialFilter={handleMaterialFilter}
+          handleProductFilter={handleProductFilter}
+          handleRemoveFilter={handleRemoveFilter}
+          activeMaterial={activeMaterial}
+          setActiveMaterial={setActiveMaterial}
+          activeColor={activeColor}
+          setActiveColor={setActiveColor}
         />
         <Products
           products={products}
           loading={loading}
-          materials={materials}
-          colors={colors}
+          materials={materialsData?.material}
+          colors={colorsData?.colors}
           setCartItems={setCartItems}
           setIsCartOpen={setIsCartOpen}
+          filters={filters}
+          handleRemoveFilter={handleRemoveFilter}
+          setActiveMaterial={setActiveMaterial}
+          setActiveColor={setActiveColor}
         />
       </div>
 

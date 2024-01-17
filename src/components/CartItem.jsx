@@ -5,7 +5,7 @@ const CartItem = ({ cartItem, handleCartItemRemove }) => {
     <li className="flex mb-4">
       <div className="mr-5 w-1/2">
         <img
-          src="/productImg.png"
+          src={cartItem?.image || "/productImg.png"}
           alt="productImg"
           className="bg-white aspect-[3/4]"
         />
