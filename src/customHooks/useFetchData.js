@@ -21,7 +21,7 @@ const useFetchData = (url) => {
         const response = await fetch(url, defaultOptions);
         const result = await response.json();
 
-        console.log(result, "data");
+        // console.log(result, "data");
 
         setData(result);
       } catch (err) {
