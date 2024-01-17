@@ -19,7 +19,7 @@ const CartItem = ({ cartItem, handleCartItemRemove }) => {
         <p className="text-[#5A112B] text-sm mb-5">{`INR ${cartItem?.price}.00`}</p>
         <div
           className="font-bold py-2 px-3 mr-4 text-white bg-[#3F3737] w-max cursor-pointer transition-all hover:bg-gray-500"
-          onClick={handleCartItemRemove}
+          onClick={() => handleCartItemRemove(cartItem?.id)}
         >
           <span className="mr-2">Remove</span>
           <span>X</span>

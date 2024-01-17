@@ -1,6 +1,8 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import ProductCard from "./ProductCard";
 import Pagination from "./Pagination";
+
+const PRODUCT_PER_PAGE = 6;
 
 const Products = ({
   products,
@@ -14,6 +16,9 @@ const Products = ({
   setActiveMaterial,
   setActiveColor,
 }) => {
+  const [activePage, setActivePage] = useState(1);
+  const pages = Math.ceil(products?.length / PRODUCT_PER_PAGE);
+
   return (
     <div className="w-4/5">
       {filters?.length > 0 && (
@@ -61,7 +66,11 @@ const Products = ({
           )}
         </div>
       )}
-      <Pagination />
+      <Pagination
+        activePage={activePage}
+        setActivePage={setActivePage}
+        pages={pages}
+      />
     </div>
   );
 };
